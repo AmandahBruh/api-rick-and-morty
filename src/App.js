@@ -87,22 +87,21 @@ function App() {
   }
 
 
-  async function CarregarTodosOsPersonagens() {
+  async function carregarTodosOsPersonagens() {
     const retorno = await fetch(
       "https://rickandmortyapi.com/api/character", 
       { method: "GET" }
     )
     .then((response) => response.json())
 
-    console.log("batata",retorno)
     return retorno.results;
   }
 
   async function ListaPersonagem() {
-    const TodosPersonagens = await CarregarTodosOsPersonagens();
+    const todosPersonagens = await carregarTodosOsPersonagens();
 
-    return TodosPersonagens.map((personagem) => (
-      <div className="card char">
+    return todosPersonagens.map(personagem => (
+      <div className="card char" key={personagem.id}>
         <img src={personagem.image} alt={personagem.name} />
 
         <h2>{personagem.name}</h2>
@@ -114,16 +113,17 @@ function App() {
           {" "}
           <b>Gênero</b>: {traduzirGenero(personagem.gender)}
         </p>
-        <p className="lista-secundaria">
-          {" "}
-          <b>Participações</b> 
+        <div className="lista-secundaria">
+          <b>Participações: </b> 
           {
           personagem.episode.map(ep => {
-            <span>
+            <span key={ep.split('episode/')[1]}>
+              {console.log("EP-"+ep.split('episode/')[1])}
               Ep-{(ep.split('episode/')[1])}
             </span>
-          })}
-        </p>
+          })
+          }
+        </div>
         <p>
           <b>Status</b>: {traduzirStatus(personagem.status)}
         </p>

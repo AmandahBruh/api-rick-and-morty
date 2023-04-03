@@ -37,8 +37,8 @@ function App() {
         return "Humanoide";
       case "Mytholog":
         return "Mytologico";
-        case "Mytholog Humanoid":
-          return "Humanoide Mitologico";
+      case "Mytholog Humanoid":
+        return "Humanoide Mitologico";
       case "Animal":
         return "Animal";
       case "Robot":
@@ -86,27 +86,25 @@ function App() {
     }
   }
 
-
   async function carregarTodosOsPersonagens() {
-    const retorno = await fetch(
-      "https://rickandmortyapi.com/api/character", 
-      { method: "GET" }
-    )
-    .then((response) => response.json())
+    const retorno = await fetch("https://rickandmortyapi.com/api/character", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
 
     return retorno.results;
   }
 
   async function ListaPersonagem() {
     const todosPersonagens = await carregarTodosOsPersonagens();
-
-    return todosPersonagens.map(personagem => (
+    console.log("Episodios", (todosPersonagens[0].episode));
+    return todosPersonagens.map((personagem) => (
       <div className="card char" key={personagem.id}>
         <img src={personagem.image} alt={personagem.name} />
 
         <h2>{personagem.name}</h2>
         <p>
-          {" "}
           <b>Espécie</b>: {traduzirEspecie(personagem.species)}
         </p>
         <p>
@@ -114,15 +112,13 @@ function App() {
           <b>Gênero</b>: {traduzirGenero(personagem.gender)}
         </p>
         <div className="lista-secundaria">
-          <b>Participações: </b> 
-          {
-          personagem.episode.map(ep => {
-            <span key={ep.split('episode/')[1]}>
-              {console.log("EP-"+ep.split('episode/')[1])}
-              Ep-{(ep.split('episode/')[1])}
+          <b>Participações: </b>
+          {personagem.episode.map((ep) => (
+            <span key={ep.split("episode/")[1]}>
+
+              Ep-{ep.split("episode/")[1]}
             </span>
-          })
-          }
+          ))}
         </div>
         <p>
           <b>Status</b>: {traduzirStatus(personagem.status)}

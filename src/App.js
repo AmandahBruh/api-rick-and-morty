@@ -26,6 +26,7 @@ const mock = [
 
 function App() {
   const [conteudo, SetConteudo] = useState(<></>);
+  const [busca, setBusca] = useState("");
 
   function traduzirEspecie(species) {
     switch (species) {
@@ -87,18 +88,26 @@ function App() {
   }
 
   async function carregarTodosOsPersonagens() {
-    const retorno = await fetch("https://rickandmortyapi.com/api/character", {
+    var requestOptions = {
       method: "GET",
-    })
-      .then((response) => response.json())
-      .catch((err) => console.log(err));
+      redirect: "follow",
+    };
 
-    return retorno.results;
+    const result = await fetch(
+      "https://rickandmortyapi.com/api/character"+busca,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {return result})
+      .catch((error) => console.log('error', error));
+
+    const char = JSON.parse(result);
+    return char.results;
   }
 
   async function ListaPersonagem() {
     const todosPersonagens = await carregarTodosOsPersonagens();
-    console.log("Episodios", (todosPersonagens[0].episode));
+    console.log("Episodios", todosPersonagens[0].episode);
     return todosPersonagens.map((personagem) => (
       <div className="card char" key={personagem.id}>
         <img src={personagem.image} alt={personagem.name} />
@@ -115,7 +124,6 @@ function App() {
           <b>Participações: </b>
           {personagem.episode.map((ep) => (
             <span key={ep.split("episode/")[1]}>
-
               Ep-{ep.split("episode/")[1]}
             </span>
           ))}
@@ -132,13 +140,26 @@ function App() {
       SetConteudo(await ListaPersonagem());
     }
     carregar();
-  }, []);
+  }, [busca]);
+
 
   return (
     <div className="App">
       <header className="cabecalho">
         <h1>Rick and Morty API</h1>
+        <h2>
+          <a href="/">Personagens</a>
+        </h2>
       </header>
+      <div className="filtros">
+        <span className="filtos-titulo">Filtros</span>
+        <div className="filtro status">          
+          <b>Status</b>
+          <span onClick={() => setBusca('?status=alive')}>Vivo</span>
+          <span onClick={() => setBusca('?status=dead')}>Morto</span>
+          <span onClick={() => setBusca('?status=unknown')}>Desconhecido</span>
+        </div>
+      </div>
       <div className="lista-principal">{conteudo}</div>
     </div>
   );

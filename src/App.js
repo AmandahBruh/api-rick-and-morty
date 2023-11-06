@@ -65,8 +65,6 @@ function App() {
         return "Vivo";
       case "Dead":
         return "Morto";
-      case "genderless":
-        return "Sem genero";
       case "unknown":
         return "Desconhecido";
       default:
@@ -80,6 +78,8 @@ function App() {
         return "Masculino";
       case "Female":
         return "Feminino";
+      case "genderless":
+        return "Sem Genero";
       case "unknown":
         return "Desconhecido";
       default:
